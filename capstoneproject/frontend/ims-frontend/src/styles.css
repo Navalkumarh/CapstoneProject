@@ -1,0 +1,378 @@
+/* Global Styles - Production Ready Insurance Management System */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+@import url('https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/litera/bootstrap.min.css');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Primary Colors */
+  --primary-blue: #0066cc;
+  --primary-blue-dark: #004499;
+  --primary-blue-light: #e6f2ff;
+  
+  /* Secondary Colors */
+  --secondary-green: #00a86b;
+  --secondary-orange: #ff8c00;
+  --secondary-red: #dc3545;
+  
+  /* Neutral Colors */
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+  --gray-900: #0f172a;
+  
+  /* Status Colors */
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+  
+  /* Brand */
+  --brand: var(--primary-blue);
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Enhanced Cards */
+.card {
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  background: linear-gradient(45deg, var(--primary-blue), var(--primary-blue-dark));
+  color: white;
+  border-radius: 16px 16px 0 0;
+  padding: 1.5rem;
+  border: none;
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+/* Enhanced Navbar */
+.navbar {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+  box-shadow: 0 4px 20px rgba(0, 102, 204, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: white !important;
+}
+
+.navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  margin: 0 0.25rem;
+}
+
+.navbar-nav .nav-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white !important;
+  transform: translateY(-2px);
+}
+
+.navbar-nav .nav-link.active {
+  background: rgba(255, 255, 255, 0.2);
+  color: white !important;
+}
+
+/* Enhanced Buttons */
+.btn {
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+  background: linear-gradient(45deg, var(--primary-blue), var(--primary-blue-dark)) !important;
+  border: none !important;
+  color: white !important;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(45deg, var(--primary-blue-dark), var(--primary-blue)) !important;
+  color: white !important;
+}
+
+.btn-success {
+  background: linear-gradient(45deg, var(--success), #16a34a) !important;
+  border: none !important;
+  color: white !important;
+}
+
+.btn-success:hover {
+  background: linear-gradient(45deg, #16a34a, var(--success)) !important;
+  color: white !important;
+}
+
+.btn-warning {
+  background: linear-gradient(45deg, var(--warning), #d97706) !important;
+  border: none !important;
+  color: white !important;
+}
+
+.btn-warning:hover {
+  background: linear-gradient(45deg, #d97706, var(--warning)) !important;
+  color: white !important;
+}
+
+.btn-danger {
+  background: linear-gradient(45deg, var(--error), #dc2626) !important;
+  border: none !important;
+  color: white !important;
+}
+
+.btn-danger:hover {
+  background: linear-gradient(45deg, #dc2626, var(--error)) !important;
+  color: white !important;
+}
+
+.btn-outline-light {
+  border: 2px solid rgba(255, 255, 255, 0.5) !important;
+  color: white !important;
+  background: transparent !important;
+}
+
+.btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: white !important;
+  color: white !important;
+}
+
+/* Navbar specific button fixes */
+.navbar .btn {
+  padding: 0.5rem 1rem !important;
+  margin: 0 0.25rem !important;
+  min-width: auto !important;
+  width: auto !important;
+}
+
+.navbar .nav-link.btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  border-radius: 8px !important;
+}
+
+/* Form Enhancements */
+.form-control {
+  border-radius: 10px;
+  border: 2px solid var(--gray-200);
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 0.25rem rgba(0, 102, 204, 0.25);
+}
+
+/* Status Badges */
+.badge {
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.status-approved {
+  background: linear-gradient(45deg, var(--success), #16a34a);
+  color: white;
+}
+
+.status-rejected {
+  background: linear-gradient(45deg, var(--error), #dc2626);
+  color: white;
+}
+
+.status-pending {
+  background: linear-gradient(45deg, var(--warning), #d97706);
+  color: white;
+}
+
+/* Container Enhancements */
+.container, .container-fluid {
+  max-width: 1400px;
+}
+
+/* Full-width sections for landing page */
+.hero-section,
+.features-section,
+.stats-section,
+.cta-section {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.hero-section .container,
+.features-section .container,
+.stats-section .container,
+.cta-section .container {
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Override Bootstrap container margins for full-width */
+.full-width {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+}
+
+/* Section Headers */
+.section-title {
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(45deg, var(--primary-blue), var(--primary-blue-dark));
+  border-radius: 2px;
+}
+
+/* Table Enhancements */
+.table {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.table thead th {
+  background: linear-gradient(45deg, var(--gray-100), var(--gray-200));
+  border: none;
+  font-weight: 600;
+  color: var(--gray-700);
+  padding: 1rem;
+}
+
+.table tbody td {
+  padding: 1rem;
+  border-color: var(--gray-100);
+}
+
+.table tbody tr:hover {
+  background-color: var(--gray-50);
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-in {
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Loading Spinner */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--gray-200);
+  border-top: 4px solid var(--primary-blue);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  .btn:not(.navbar .btn) {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  .table-responsive {
+    font-size: 0.875rem;
+  }
+}
+.badge { font-size: .85rem; }
+a.link-like, .link-like a { color: var(--brand) !important; text-decoration: underline !important; cursor: pointer; }
+.table-responsive-md { overflow-x: auto; }
+.sticky-head thead th { position: sticky; top: 0; background: #fff; z-index: 1; }
+.hero {
+  background: radial-gradient(1200px 400px at 10% -20%, #e9f2ff, transparent),
+              radial-gradient(800px 300px at 90% 0%, #eaf6ff, transparent),
+              linear-gradient(90deg, #fff, #f8fbff);
+  border-radius: 18px;
+}
+.footer { color:#6c757d; font-size:.9rem; }

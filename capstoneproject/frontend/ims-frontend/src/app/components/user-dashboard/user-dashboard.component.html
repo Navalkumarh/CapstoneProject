@@ -1,0 +1,617 @@
+<!-- Header Section -->
+<div class="dashboard-header">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <h1 class="dashboard-title">
+          <i class="fas fa-tachometer-alt me-3"></i>
+          User Dashboard
+        </h1>
+        <p class="dashboard-subtitle">Welcome back! Manage your policies and claims.</p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <div class="user-info">
+          <span class="badge bg-primary fs-6">User ID: {{userId}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Stats -->
+<section class="quick-stats py-4">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-3 col-md-6">
+        <div class="stat-card stat-card-primary">
+          <div class="stat-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{policies.length}}</div>
+            <div class="stat-label">Active Policies</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="stat-card stat-card-success">
+          <div class="stat-icon">
+            <i class="fas fa-file-invoice"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{claims.length}}</div>
+            <div class="stat-label">Total Claims</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="stat-card stat-card-info">
+          <div class="stat-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{getPendingClaims()}}</div>
+            <div class="stat-label">Pending Claims</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content -->
+<div class="container">
+  <div class="row g-4">
+    <!-- Policies Section -->
+    <div class="col-lg-8">
+      <div class="content-card">
+        <div class="card-header">
+          <h5 class="card-title">
+            <i class="fas fa-shield-halved me-2 text-primary"></i>
+            My Policies
+          </h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="!policies.length" class="empty-state">
+            <i class="fas fa-shield-alt"></i>
+            <h6>No Policies Assigned</h6>
+            <p>No policies have been assigned to your account yet.</p>
+          </div>
+          <div class="row g-3" *ngIf="policies.length">
+            <div class="col-md-6" *ngFor="let policy of policies">
+              <div class="policy-card">
+                <div class="policy-header">
+                  <div class="policy-type">{{policy.type}}</div>
+                  <div class="policy-status active">Active</div>
+                </div>
+                <div class="policy-number">{{policy.policy_number}}</div>
+                <div class="policy-details">
+                  <div class="detail-item">
+                    <span class="label">Start Date:</span>
+                    <span class="value">{{policy.start_date | date:'mediumDate'}}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="label">End Date:</span>
+                    <span class="value">{{policy.end_date | date:'mediumDate'}}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="label">Premium:</span>
+                    <span class="value premium">₹{{policy.premium | number}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions Sidebar -->
+    <div class="col-lg-4">
+      <div class="sidebar-content">
+        <!-- File Claim Card -->
+        <div class="content-card mb-4">
+          <div class="card-header">
+            <h5 class="card-title">
+              <i class="fas fa-plus-circle me-2 text-success"></i>
+              File New Claim
+            </h5>
+          </div>
+          <div class="card-body">
+            <form class="claim-form">
+              <div class="mb-3">
+                <label class="form-label">Select Policy</label>
+                <select class="form-select" [(ngModel)]="newClaim.policy_number" name="policy" required>
+                  <option value="">Choose a policy...</option>
+                  <option *ngFor="let p of policies" [value]="p.policy_number">
+                    {{p.policy_number}} — {{p.type}}
+                  </option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Claim Description</label>
+                <textarea class="form-control" rows="3" [(ngModel)]="newClaim.description" name="description" 
+                         placeholder="Describe your claim in detail..." required></textarea>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Supporting Document</label>
+                <div class="file-upload-wrapper">
+                  <input type="file" class="form-control" (change)="onFile($event)" 
+                         accept="image/*,application/pdf" required>
+                  <small class="form-text text-muted">Upload image or PDF (required)</small>
+                </div>
+              </div>
+              <button type="button" class="btn btn-success btn-block w-100" 
+                      [disabled]="!newClaim.policy_number || !newClaim.description || !file" 
+                      (click)="submit()">
+                <i class="fas fa-paper-plane me-2"></i>
+                Submit Claim
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Claims History -->
+    <div class="col-12">
+      <div class="content-card">
+        <div class="card-header">
+          <h5 class="card-title">
+            <i class="fas fa-history me-2 text-warning"></i>
+            Claims History
+          </h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="!claims.length" class="empty-state">
+            <i class="fas fa-file-invoice"></i>
+            <h6>No Claims Yet</h6>
+            <p>You haven't submitted any claims yet. Use the form above to file your first claim.</p>
+          </div>
+          <div class="table-responsive" *ngIf="claims.length">
+            <table class="table table-hover claims-table">
+              <thead>
+                <tr>
+                  <th>Claim ID</th>
+                  <th>Policy</th>
+                  <th>Description</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Attachment</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let claim of claims">
+                  <td>
+                    <span class="claim-id">#{{claim.claim_id}}</span>
+                  </td>
+                  <td>
+                    <div class="policy-ref">{{claim.policy_number}}</div>
+                  </td>
+                  <td>
+                    <div class="description">{{claim.description}}</div>
+                  </td>
+                  <td>
+                    <div class="claim-date">{{claim.created_at | date:'mediumDate'}}</div>
+                  </td>
+                  <td>
+                    <span class="status-badge" 
+                          [class.status-pending]="claim.status === 'Pending'"
+                          [class.status-approved]="claim.status === 'Approved'"
+                          [class.status-rejected]="claim.status === 'Rejected'">
+                      {{claim.status}}
+                    </span>
+                    <div *ngIf="claim.remarks" class="remarks">
+                      <i class="fas fa-comment-dots me-1"></i>
+                      {{claim.remarks}}
+                    </div>
+                  </td>
+                  <td>
+                    <a *ngIf="claim.attachment" [href]="attachmentUrl(claim, true)" 
+                       class="attachment-link" target="_blank">
+                      <i class="fas fa-download me-1"></i>
+                      Download
+                    </a>
+                  </td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-danger" 
+                            (click)="remove(claim.claim_id)"
+                            [disabled]="claim.status === 'Approved'">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Dashboard Header */
+.dashboard-header {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+  color: white;
+  padding: 2rem 0;
+  margin-bottom: 0;
+}
+
+.dashboard-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-subtitle {
+  opacity: 0.9;
+  margin-bottom: 0;
+}
+
+.user-info .badge {
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  border-radius: 50px;
+}
+
+/* Quick Stats */
+.quick-stats {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.stat-card {
+  background: white;
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.stat-card-primary .stat-icon { background: linear-gradient(45deg, #3b82f6, #1d4ed8); }
+.stat-card-success .stat-icon { background: linear-gradient(45deg, #10b981, #059669); }
+.stat-card-info .stat-icon { background: linear-gradient(45deg, #06b6d4, #0891b2); }
+.stat-card-warning .stat-icon { background: linear-gradient(45deg, #f59e0b, #d97706); }
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  color: var(--gray-600);
+  font-weight: 500;
+}
+
+/* Content Cards */
+.content-card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--gray-200);
+  overflow: hidden;
+}
+
+.card-header {
+  background: var(--gray-50);
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.card-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--gray-500);
+}
+
+.empty-state i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-state h6 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--gray-700);
+}
+
+/* Policy Cards */
+.policy-card {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.policy-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary-blue-light);
+}
+
+.policy-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.policy-type {
+  font-weight: 600;
+  color: var(--gray-800);
+  font-size: 1rem;
+}
+
+.policy-status.active {
+  background: var(--success);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.policy-number {
+  font-family: 'Monaco', monospace;
+  font-size: 0.9rem;
+  color: var(--primary-blue);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.policy-details .detail-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.policy-details .label {
+  color: var(--gray-600);
+  font-size: 0.875rem;
+}
+
+.policy-details .value {
+  font-weight: 500;
+  color: var(--gray-800);
+}
+
+.policy-details .premium {
+  color: var(--success);
+  font-weight: 600;
+}
+
+/* Form Styles */
+.claim-form .form-label {
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: 0.5rem;
+}
+
+.claim-form .form-control, .claim-form .form-select {
+  border-radius: 8px;
+  border: 1px solid var(--gray-300);
+  padding: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.claim-form .form-control:focus, .claim-form .form-select:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.15);
+}
+
+.file-upload-wrapper {
+  position: relative;
+}
+
+.btn-block {
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-success {
+  background: linear-gradient(45deg, var(--success), #059669);
+  border: none;
+}
+
+.btn-success:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+}
+
+/* Quick Links */
+.quick-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.quick-link-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--gray-50);
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--gray-700);
+  transition: all 0.3s ease;
+}
+
+.quick-link-item:hover {
+  background: var(--primary-blue);
+  color: white;
+  transform: translateX(5px);
+}
+
+.quick-link-item i:first-child {
+  width: 20px;
+  text-align: center;
+}
+
+.quick-link-item span {
+  flex: 1;
+  font-weight: 500;
+}
+
+/* Claims Table */
+.claims-table {
+  margin: 0;
+}
+
+.claims-table th {
+  background: var(--gray-50);
+  border: none;
+  padding: 1rem 0.75rem;
+  font-weight: 600;
+  color: var(--gray-700);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.claims-table td {
+  padding: 1rem 0.75rem;
+  border-color: var(--gray-200);
+  vertical-align: middle;
+}
+
+.claim-id {
+  font-family: 'Monaco', monospace;
+  font-weight: 600;
+  color: var(--primary-blue);
+}
+
+.policy-ref {
+  font-size: 0.875rem;
+  color: var(--gray-600);
+}
+
+.description {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.claim-date {
+  font-size: 0.875rem;
+  color: var(--gray-600);
+}
+
+.status-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+}
+
+.status-approved {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+}
+
+.status-rejected {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+}
+
+.remarks {
+  font-size: 0.75rem;
+  color: var(--warning);
+  margin-top: 0.25rem;
+}
+
+.attachment-link {
+  color: var(--primary-blue);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.attachment-link:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard-header {
+    text-align: center;
+  }
+  
+  .dashboard-title {
+    font-size: 1.5rem;
+  }
+  
+  .stat-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .stat-icon {
+    margin-bottom: 0.5rem;
+  }
+  
+  .policy-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .claims-table {
+    font-size: 0.875rem;
+  }
+  
+  .description {
+    max-width: 150px;
+  }
+}
+</style>

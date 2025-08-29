@@ -1,0 +1,261 @@
+<nav class="navbar navbar-expand-lg fixed-top">
+  <div class="container">
+    <!-- Brand -->
+    <a class="navbar-brand d-flex align-items-center" routerLink="/">
+      <div class="brand-icon me-2">
+        <i class="fas fa-shield-alt"></i>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">InsureMax</span>
+        <small class="brand-tagline d-block">Insurance Management</small>
+      </div>
+    </a>
+
+    <!-- Mobile Toggle -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navigation -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <!-- Admin Navigation -->
+        <li class="nav-item" *ngIf="auth.isLoggedIn && auth.role==='admin'">
+          <a class="nav-link" routerLink="/admin-dashboard" routerLinkActive="active">
+            <i class="fas fa-tachometer-alt me-2"></i>
+            Dashboard
+          </a>
+        </li>
+        
+        <!-- User Navigation -->
+        <ng-container *ngIf="auth.isLoggedIn && auth.role==='user'">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/user-dashboard" routerLinkActive="active">
+              <i class="fas fa-home me-2"></i>
+              Dashboard
+            </a>
+          </li>
+        </ng-container>
+      </ul>
+
+      <!-- User Profile & Actions -->
+      <div class="navbar-nav">
+        <ng-container *ngIf="!auth.isLoggedIn">
+          <a class="nav-link btn btn-outline-light me-2" routerLink="/login">
+            <i class="fas fa-sign-in-alt me-2"></i>
+            Login
+          </a>
+          <a class="nav-link btn btn-primary" routerLink="/register">
+            <i class="fas fa-user-plus me-2"></i>
+            Register
+          </a>
+        </ng-container>
+        
+        <div class="nav-item dropdown" *ngIf="auth.isLoggedIn">
+          <a class="nav-link dropdown-toggle user-profile" href="#" id="navbarDropdown" 
+             role="button" data-bs-toggle="dropdown">
+            <div class="user-avatar me-2">
+              <i class="fas fa-user-circle"></i>
+            </div>
+            <span class="user-name">{{ auth.username }}</span>
+            <span class="user-role badge badge-light ms-2">{{ auth.role }}</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <!-- <li>
+              <a class="dropdown-item" href="#">
+                <i class="fas fa-user me-2"></i>
+                Profile
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#">
+                <i class="fas fa-cog me-2"></i>
+                Settings
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li> -->
+            <li>
+              <a class="dropdown-item text-danger" href="#" (click)="logout()">
+                <i class="fas fa-sign-out-alt me-2"></i>
+                Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Spacer for fixed navbar -->
+<div style="height: 80px;"></div>
+
+<style>
+.navbar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px);
+  padding: 1rem 0;
+  transition: all 0.3s ease;
+}
+
+.brand-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.brand-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  line-height: 1;
+}
+
+.brand-tagline {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
+  line-height: 1;
+}
+
+.navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 500;
+  padding: 0.75rem 1rem !important;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  margin: 0 0.25rem;
+  position: relative;
+}
+
+.navbar-nav .nav-link:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white !important;
+  transform: translateY(-2px);
+}
+
+.navbar-nav .nav-link.active {
+  background: rgba(255, 255, 255, 0.2);
+  color: white !important;
+}
+
+.navbar-nav .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 3px;
+  background: #ff6b6b;
+  border-radius: 2px;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 25px;
+  padding: 0.5rem 1rem !important;
+}
+
+.user-avatar {
+  font-size: 1.5rem;
+  color: white;
+}
+
+.user-name {
+  font-weight: 600;
+  color: white;
+}
+
+.user-role {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 15px;
+}
+
+.dropdown-menu {
+  border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  border: none;
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.dropdown-item {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  margin: 0.25rem;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background: var(--primary-blue);
+  color: white;
+  transform: translateX(5px);
+}
+
+.dropdown-item.text-danger {
+  color: #dc3545 !important;
+}
+
+.dropdown-item.text-danger:hover {
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545 !important;
+  transform: translateX(5px);
+}
+
+.btn-outline-light {
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  background: transparent;
+}
+
+.btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: white;
+  color: white;
+}
+
+.btn-light {
+  background: white;
+  border: none;
+  color: var(--primary-blue);
+  font-weight: 600;
+}
+
+.btn-light:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 991px) {
+  .navbar-collapse {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    margin-top: 1rem;
+    padding: 1rem;
+    backdrop-filter: blur(20px);
+  }
+  
+  .navbar-nav .nav-link {
+    margin: 0.25rem 0;
+    text-align: center;
+  }
+  
+  .user-profile {
+    justify-content: center;
+    margin-top: 1rem;
+  }
+}</style>

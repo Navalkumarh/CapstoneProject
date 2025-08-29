@@ -1,0 +1,12 @@
+<div class="row justify-content-center">
+  <div class="col-md-5">
+    <div class="card p-3 shadow-sm">
+      <h5>Register</h5>
+      <div class="mb-2"><input class="form-control" [(ngModel)]="username" placeholder="Email"></div>
+      <div class="mb-2"><input type="password" class="form-control" [(ngModel)]="password" placeholder="Password"></div>
+      <div class="mb-2"><input type="password" class="form-control" [(ngModel)]="confirm" placeholder="Confirm Password"></div>
+      <div class="mb-2"><input type="number" class="form-control" [(ngModel)]="user_id" placeholder="User ID" min="0"></div>
+      <button class="btn btn-primary w-100" (click)="doRegister()">Register</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,100 @@
+version: "3.8"
+
+services:
+  # Policy Service - Development
+  policy-service:
+    build:
+      context: ./backend/policyservice
+      dockerfile: Dockerfile
+    container_name: ims-policy-service-dev
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./backend/policyservice:/app
+      - policy-data-dev:/app/instance
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - PORT=5001
+    networks:
+      - ims-network-dev
+    command: python app.py
+
+  # Claim Service - Development
+  claim-service:
+    build:
+      context: ./backend/claimservice
+      dockerfile: Dockerfile
+    container_name: ims-claim-service-dev
+    ports:
+      - "5002:5002"
+    volumes:
+      - ./backend/claimservice:/app
+      - claim-data-dev:/app/instance
+      - uploads-dev:/app/uploads
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - PORT=5002
+    networks:
+      - ims-network-dev
+    command: python app.py
+
+  # Gateway Service - Development
+  gateway:
+    build:
+      context: ./backend/gateway
+      dockerfile: Dockerfile
+    container_name: ims-gateway-dev
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend/gateway:/app
+      - gateway-data-dev:/app/instance
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - PORT=5000
+      - POLICY_URL=http://policy-service:5001
+      - CLAIM_URL=http://claim-service:5002
+    networks:
+      - ims-network-dev
+    depends_on:
+      - policy-service
+      - claim-service
+    command: python app.py
+
+  # Frontend Service - Development
+  frontend:
+    image: node:18-alpine
+    container_name: ims-frontend-dev
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend/ims-frontend:/app
+      - /app/node_modules
+    working_dir: /app
+    environment:
+      - NODE_ENV=development
+    networks:
+      - ims-network-dev
+    depends_on:
+      - gateway
+    command: sh -c "npm install && npm start -- --host 0.0.0.0 --port 4200"
+
+# Volumes for persistent data (development)
+volumes:
+  policy-data-dev:
+    driver: local
+  claim-data-dev:
+    driver: local
+  gateway-data-dev:
+    driver: local
+  uploads-dev:
+    driver: local
+
+# Network for inter-service communication (development)
+networks:
+  ims-network-dev:
+    driver: bridge
+    name: ims-network-dev

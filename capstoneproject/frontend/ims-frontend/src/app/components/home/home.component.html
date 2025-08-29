@@ -1,0 +1,556 @@
+<!-- Hero Section with Carousel -->
+<section class="hero-section">
+  <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+    </div>
+    
+    <div class="carousel-inner">
+      <!-- Slide 1 -->
+      <div class="carousel-item active">
+        <div class="carousel-content">
+          <div class="container-fluid px-4">
+            <div class="row align-items-center">
+              <div class="col-lg-6">
+                <div class="hero-text fade-in">
+                  <h1 class="hero-title">Comprehensive Insurance Management</h1>
+                  <p class="hero-description">
+                    Streamline your insurance operations with our advanced management system. 
+                    Handle policies and claims efficiently in one centralized platform.
+                  </p>
+                  <div class="hero-actions">
+                    <a routerLink="/register" class="btn btn-primary btn-lg me-3" *ngIf="!auth.isLoggedIn">
+                      <i class="fas fa-rocket me-2"></i>
+                      Get Started
+                    </a>
+                    <a routerLink="/login" class="btn btn-outline-light btn-lg" *ngIf="!auth.isLoggedIn">
+                      <i class="fas fa-sign-in-alt me-2"></i>
+                      Sign In
+                    </a>
+                    <a routerLink="/user-dashboard" class="btn btn-primary btn-lg me-3" *ngIf="auth.isLoggedIn && !auth.isAdmin()">
+                      <i class="fas fa-tachometer-alt me-2"></i>
+                      Go to Dashboard
+                    </a>
+                    <a routerLink="/admin-dashboard" class="btn btn-primary btn-lg me-3" *ngIf="auth.isLoggedIn && auth.isAdmin()">
+                      <i class="fas fa-chart-line me-2"></i>
+                      Admin Dashboard
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="hero-image">
+                  <div class="floating-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>Secure & Reliable</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="carousel-item">
+        <div class="carousel-content">
+          <div class="container-fluid px-4">
+            <div class="row align-items-center">
+              <div class="col-lg-6">
+                <div class="hero-text fade-in">
+                  <h1 class="hero-title">Smart Claims Processing</h1>
+                  <p class="hero-description">
+                    Experience lightning-fast claims processing with our intelligent workflow system. 
+                    From submission to approval, everything is automated and efficient.
+                  </p>
+                  <div class="hero-actions">
+                    <a routerLink="/register" class="btn btn-success btn-lg me-3" *ngIf="!auth.isLoggedIn">
+                      <i class="fas fa-file-invoice me-2"></i>
+                      Start Claiming
+                    </a>
+                    <a routerLink="/user-dashboard" class="btn btn-success btn-lg me-3" *ngIf="auth.isLoggedIn">
+                      <i class="fas fa-file-invoice me-2"></i>
+                      View Claims
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="hero-image">
+                  <div class="floating-card floating-card-success">
+                    <i class="fas fa-chart-line"></i>
+                    <h4>Fast Processing</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="carousel-item">
+        <div class="carousel-content">
+          <div class="container-fluid px-4">
+            <div class="row align-items-center">
+              <div class="col-lg-6">
+                <div class="hero-text fade-in">
+                  <h1 class="hero-title">Efficient Claims Processing</h1>
+                  <p class="hero-description">
+                    Streamline your claims workflow with our advanced processing system. 
+                    Submit, track, and manage all your insurance claims with ease.
+                  </p>
+                  <div class="hero-actions">
+                    <a routerLink="/register" class="btn btn-warning btn-lg me-3" *ngIf="!auth.isLoggedIn">
+                      <i class="fas fa-file-medical me-2"></i>
+                      Start Claims
+                    </a>
+                    <a routerLink="/user-dashboard" class="btn btn-warning btn-lg me-3" *ngIf="auth.isLoggedIn">
+                      <i class="fas fa-file-medical me-2"></i>
+                      Submit Claim
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="hero-image">
+                  <div class="floating-card floating-card-warning">
+                    <i class="fas fa-clipboard-check"></i>
+                    <h4>Easy Procurement</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carousel Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section py-5">
+  <div class="container-fluid px-4">
+    <div class="row text-center mb-5">
+      <div class="col-12">
+        <h2 class="section-title">Why Choose InsureMax?</h2>
+        <p class="section-description">Discover the features that make us the preferred choice for insurance management</p>
+      </div>
+    </div>
+    
+    <div class="row g-4">
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-shield-halved"></i>
+          </div>
+          <h4 class="feature-title">Policy Management</h4>
+          <p class="feature-description">
+            Comprehensive policy lifecycle management with automated workflows and intelligent notifications.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-file-contract"></i>
+          </div>
+          <h4 class="feature-title">Claims Processing</h4>
+          <p class="feature-description">
+            Streamlined claims processing with document management and automated approval workflows.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <h4 class="feature-title">Analytics & Reports</h4>
+          <p class="feature-description">
+            Comprehensive reporting and analytics to track performance and gain insights into your operations.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <h4 class="feature-title">Analytics & Reporting</h4>
+          <p class="feature-description">
+            Comprehensive analytics dashboard with real-time reporting and business intelligence.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-users-cog"></i>
+          </div>
+          <h4 class="feature-title">User Management</h4>
+          <p class="feature-description">
+            Role-based access control with comprehensive user management and security features.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <h4 class="feature-title">Mobile Responsive</h4>
+          <p class="feature-description">
+            Fully responsive design that works seamlessly across all devices and screen sizes.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section py-5">
+  <div class="container-fluid px-4">
+    <div class="row text-center">
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stat-item">
+          <div class="stat-number">10K+</div>
+          <div class="stat-label">Policies Managed</div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stat-item">
+          <div class="stat-number">98%</div>
+          <div class="stat-label">Customer Satisfaction</div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stat-item">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">Support Available</div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stat-item">
+          <div class="stat-number">5M+</div>
+          <div class="stat-label">Claims Processed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section py-5">
+  <div class="container-fluid px-4">
+    <div class="row justify-content-center text-center">
+      <div class="col-lg-8">
+        <div class="cta-content">
+          <h2 class="cta-title">Ready to Transform Your Insurance Management?</h2>
+          <p class="cta-description">
+            Join thousands of satisfied customers who have revolutionized their insurance operations with InsureMax.
+          </p>
+          <div class="cta-actions">
+            <a routerLink="/register" class="btn btn-light btn-lg me-3" *ngIf="!auth.isLoggedIn">
+              <i class="fas fa-user-plus me-2"></i>
+              Create Account
+            </a>
+            <a routerLink="/login" class="btn btn-outline-light btn-lg" *ngIf="!auth.isLoggedIn">
+              <i class="fas fa-sign-in-alt me-2"></i>
+              Sign In Now
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* Hero Section */
+.hero-section {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  overflow: hidden;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.carousel-content {
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  padding: 100px 0;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.hero-description {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.hero-image {
+  position: relative;
+  text-align: center;
+}
+
+.floating-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  color: white;
+  animation: float 6s ease-in-out infinite;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.floating-card-success {
+  background: rgba(34, 197, 94, 0.2);
+}
+
+.floating-card-warning {
+  background: rgba(245, 158, 11, 0.2);
+}
+
+.floating-card i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.floating-card h4 {
+  margin: 0;
+  font-weight: 600;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(2deg); }
+}
+
+/* Carousel Controls */
+.carousel-indicators {
+  bottom: 30px;
+}
+
+.carousel-indicators [data-bs-target] {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: none;
+  margin: 0 5px;
+}
+
+.carousel-indicators .active {
+  background-color: white;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  backdrop-filter: blur(10px);
+}
+
+.carousel-control-prev {
+  left: 30px;
+}
+
+.carousel-control-next {
+  right: 30px;
+}
+
+/* Features Section */
+.features-section {
+  background: white;
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: 1rem;
+}
+
+.section-description {
+  font-size: 1.1rem;
+  color: var(--gray-600);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid var(--gray-200);
+  height: 100%;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+.feature-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(45deg, var(--primary-blue), var(--primary-blue-dark));
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  font-size: 2rem;
+  color: white;
+}
+
+.feature-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin-bottom: 1rem;
+}
+
+.feature-description {
+  color: var(--gray-600);
+  line-height: 1.6;
+}
+
+/* Stats Section */
+.stats-section {
+  background: linear-gradient(135deg, var(--gray-800) 0%, var(--gray-900) 100%);
+  color: white;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.stat-item {
+  padding: 1.5rem;
+}
+
+.stat-number {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--primary-blue-light);
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+/* CTA Section */
+.cta-section {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+  color: white;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.cta-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.cta-description {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.cta-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .hero-description {
+    font-size: 1rem;
+  }
+  
+  .hero-actions {
+    justify-content: center;
+  }
+  
+  .carousel-control-prev,
+  .carousel-control-next {
+    display: none;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+  }
+  
+  .feature-card {
+    padding: 2rem 1.5rem;
+  }
+  
+  .stat-number {
+    font-size: 2.5rem;
+  }
+  
+  .cta-title {
+    font-size: 2rem;
+  }
+}
+</style>

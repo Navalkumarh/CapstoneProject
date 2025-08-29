@@ -1,0 +1,839 @@
+<!-- Admin Header -->
+<div class="admin-header">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <h1 class="admin-title">
+          <i class="fas fa-chart-line me-3"></i>
+          Admin Dashboard
+        </h1>
+        <p class="admin-subtitle">Manage policies and claims</p>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- Dashboard Stats -->
+<section class="dashboard-stats py-4">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-3 col-md-6">
+        <div class="stats-card stats-primary">
+          <div class="stats-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <div class="stats-content">
+            <div class="stats-number">{{policies.length}}</div>
+            <div class="stats-label">Total Policies</div>
+            <div class="stats-change">
+              <i class="fas fa-arrow-up"></i>
+              +12% from last month
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-md-6">
+        <div class="stats-card stats-success">
+          <div class="stats-icon">
+            <i class="fas fa-file-invoice"></i>
+          </div>
+          <div class="stats-content">
+            <div class="stats-number">{{claims.length}}</div>
+            <div class="stats-label">Total Claims</div>
+            <div class="stats-change">
+              <i class="fas fa-clock"></i>
+              {{getPendingClaimsCount()}} pending
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-md-6">
+        <div class="stats-card stats-info">
+          <div class="stats-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stats-content">
+            <div class="stats-number">{{getUniqueUsersCount()}}</div>
+            <div class="stats-label">Active Users</div>
+            <div class="stats-change">
+              <i class="fas fa-user-plus"></i>
+              +3 new this week
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tab Navigation -->
+<div class="container">
+  <div class="tab-navigation">
+    <button class="tab-btn" [class.active]="activeTab === 'policies'" (click)="setActiveTab('policies')">
+      <i class="fas fa-shield-alt me-2"></i>
+      Policies Management
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'claims'" (click)="setActiveTab('claims')">
+      <i class="fas fa-file-invoice me-2"></i>
+      Claims Review
+      <span class="badge bg-warning ms-2" *ngIf="getPendingClaimsCount() > 0">
+        {{getPendingClaimsCount()}}
+      </span>
+    </button>
+  </div>
+
+  <!-- Policies Tab -->
+  <div class="tab-content" *ngIf="activeTab === 'policies'">
+    <div class="admin-card">
+      <div class="card-header">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+          <h5 class="card-title mb-0">
+            <i class="fas fa-shield-alt me-2 text-primary"></i>
+            Policy Management
+          </h5>
+          <div class="d-flex gap-2 flex-wrap">
+            <div class="search-box">
+              <input class="form-control" placeholder="Search policies..." 
+                     [(ngModel)]="policyQuery" (input)="onQueryChange()"/>
+              <i class="fas fa-search search-icon"></i>
+              <div class="suggestions-dropdown" *ngIf="suggestions.length">
+                <button class="suggestion-item" *ngFor="let s of suggestions" (click)="useSuggestion(s)">
+                  <div class="suggestion-main">{{s.policy_number}} — {{s.customer_name}}</div>
+                  <div class="suggestion-sub">{{s.type}}</div>
+                </button>
+              </div>
+            </div>
+            <button class="btn btn-outline-primary" (click)="search()">
+              <i class="fas fa-search me-2"></i>Search
+            </button>
+            <button class="btn btn-outline-secondary" (click)="reset()">
+              <i class="fas fa-undo me-2"></i>Reset
+            </button>
+            <button class="btn btn-primary" (click)="toggleCreate()">
+              <i class="fas fa-plus me-2"></i>
+              {{ showCreate ? 'Cancel' : 'Add Policy' }}
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card-body">
+        <!-- Add Policy Form -->
+        <div class="create-form" *ngIf="showCreate && !editPolicy">
+          <h6 class="form-title">
+            <i class="fas fa-plus-circle me-2"></i>
+            Create New Policy
+          </h6>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Policy Number</label>
+              <input class="form-control" placeholder="POL-001" [(ngModel)]="newPolicy.policy_number"/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Customer Name</label>
+              <input class="form-control" placeholder="John Doe" [(ngModel)]="newPolicy.customer_name"/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Policy Type</label>
+              <select class="form-select" [(ngModel)]="newPolicy.type">
+                <option value="">Select Type</option>
+                <option value="Health">Health</option>
+                <option value="Motor">Motor</option>
+                <option value="Home">Home</option>
+                <option value="Life">Life</option>
+                <option value="Travel">Travel</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Premium Amount</label>
+              <input type="number" class="form-control" placeholder="10000" [(ngModel)]="newPolicy.premium" min="0"/>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">User ID</label>
+              <input type="number" class="form-control" placeholder="123" [(ngModel)]="newPolicy.user_id" min="0"/>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Start Date</label>
+              <input type="date" class="form-control" [(ngModel)]="newPolicy.start_date"/>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">End Date</label>
+              <input type="date" class="form-control" [(ngModel)]="newPolicy.end_date"/>
+            </div>
+            <div class="col-12">
+              <button class="btn btn-success me-2" (click)="create()">
+                <i class="fas fa-save me-2"></i>Create Policy
+              </button>
+              <button class="btn btn-outline-secondary" (click)="toggleCreate()">
+                <i class="fas fa-times me-2"></i>Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit Policy Form -->
+        <div class="create-form" *ngIf="editPolicy">
+          <h6 class="form-title">
+            <i class="fas fa-edit me-2"></i>
+            Edit Policy
+          </h6>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Policy Number</label>
+              <input class="form-control" [(ngModel)]="editPolicy.policy_number"/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Customer Name</label>
+              <input class="form-control" [(ngModel)]="editPolicy.customer_name"/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Policy Type</label>
+              <input class="form-control" [(ngModel)]="editPolicy.type"/>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Premium Amount</label>
+              <input type="number" class="form-control" [(ngModel)]="editPolicy.premium" min="0"/>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">User ID</label>
+              <input type="number" class="form-control" [(ngModel)]="editPolicy.user_id" min="0"/>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Start Date</label>
+              <input type="date" class="form-control" [(ngModel)]="editPolicy.start_date"/>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">End Date</label>
+              <input type="date" class="form-control" [(ngModel)]="editPolicy.end_date"/>
+            </div>
+            <div class="col-12">
+              <button class="btn btn-success me-2" (click)="update()">
+                <i class="fas fa-save me-2"></i>Save Changes
+              </button>
+              <button class="btn btn-outline-secondary" (click)="editPolicy=null">
+                <i class="fas fa-times me-2"></i>Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Policies Table -->
+        <div class="table-responsive" *ngIf="policies.length">
+          <table class="table admin-table">
+            <thead>
+              <tr>
+                <th>Policy Number</th>
+                <th>Customer</th>
+                <th>Type</th>
+                <th>Premium</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>User ID</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let policy of policies">
+                <td>
+                  <div class="policy-number">{{policy.policy_number}}</div>
+                </td>
+                <td>
+                  <div class="customer-name">{{policy.customer_name}}</div>
+                </td>
+                <td>
+                  <span class="type-badge type-{{policy.type.toLowerCase()}}">{{policy.type}}</span>
+                </td>
+                <td>
+                  <div class="premium-amount">₹{{policy.premium | number}}</div>
+                </td>
+                <td>
+                  <div class="date">{{policy.start_date | date:'mediumDate'}}</div>
+                </td>
+                <td>
+                  <div class="date">{{policy.end_date | date:'mediumDate'}}</div>
+                </td>
+                <td>
+                  <span class="user-id">{{policy.user_id}}</span>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn btn-sm btn-outline-primary me-1" (click)="startEdit(policy)">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="remove(policy.policy_id)">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="empty-state" *ngIf="!policies.length">
+          <i class="fas fa-shield-alt"></i>
+          <h6>No Policies Found</h6>
+          <p>No policies match your current search criteria.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Claims Tab -->
+  <div class="tab-content" *ngIf="activeTab === 'claims'">
+    <div class="admin-card">
+      <div class="card-header">
+        <h5 class="card-title mb-0">
+          <i class="fas fa-file-invoice me-2 text-success"></i>
+          Claims Management
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive" *ngIf="claims.length">
+          <table class="table admin-table">
+            <thead>
+              <tr>
+                <th>Claim ID</th>
+                <th>User ID</th>
+                <th>Policy</th>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Attachment</th>
+                <th>Remarks</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let claim of claims">
+                <td>
+                  <span class="claim-id">#{{claim.claim_id}}</span>
+                </td>
+                <td>
+                  <span class="user-id">{{claimUserIdMap[claim.claim_id] || '-'}}</span>
+                </td>
+                <td>
+                  <div class="policy-ref">{{claim.policy_number}}</div>
+                </td>
+                <td>
+                  <div class="description-cell">{{claim.description}}</div>
+                </td>
+                <td>
+                  <div class="date">{{claim.created_at | date:'mediumDate'}}</div>
+                </td>
+                <td>
+                  <span class="status-badge" 
+                        [class.status-pending]="claim.status === 'Pending'"
+                        [class.status-approved]="claim.status === 'Approved'"
+                        [class.status-rejected]="claim.status === 'Rejected'">
+                    {{claim.status}}
+                  </span>
+                </td>
+                <td>
+                  <a *ngIf="claim.attachment" [href]="attachment(claim, true)" 
+                     class="attachment-link" target="_blank">
+                    <i class="fas fa-download me-1"></i>
+                    View
+                  </a>
+                </td>
+                <td>
+                  <div class="remarks-section">
+                    <input class="form-control form-control-sm mb-1" 
+                           [(ngModel)]="remarksMap[claim.claim_id]" 
+                           placeholder="Add remarks...">
+                    <div class="previous-remarks" *ngIf="claim.remarks">
+                      <small class="text-muted">Previous: {{claim.remarks}}</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn btn-sm btn-success me-1" 
+                            (click)="approve(claim.claim_id)"
+                            [disabled]="claim.status === 'Approved'">
+                      <i class="fas fa-check"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" 
+                            (click)="reject(claim.claim_id)"
+                            [disabled]="claim.status === 'Rejected'">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="empty-state" *ngIf="!claims.length">
+          <i class="fas fa-file-invoice"></i>
+          <h6>No Claims Submitted</h6>
+          <p>No claims have been submitted yet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Admin Header */
+.admin-header {
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+  color: white;
+  padding: 2rem 0;
+}
+
+.admin-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.admin-subtitle {
+  opacity: 0.9;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+}
+
+.admin-actions .btn {
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+/* Dashboard Stats */
+.dashboard-stats {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.stats-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--gray-200);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stats-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+.stats-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: white;
+}
+
+.stats-primary .stats-icon { background: linear-gradient(45deg, #3b82f6, #1d4ed8); }
+.stats-success .stats-icon { background: linear-gradient(45deg, #10b981, #059669); }
+.stats-warning .stats-icon { background: linear-gradient(45deg, #f59e0b, #d97706); }
+.stats-info .stats-icon { background: linear-gradient(45deg, #06b6d4, #0891b2); }
+
+.stats-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: 0.25rem;
+}
+
+.stats-label {
+  color: var(--gray-600);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.stats-change {
+  color: var(--gray-500);
+  font-size: 0.8rem;
+}
+
+.stats-change i {
+  margin-right: 0.25rem;
+}
+
+/* Tab Navigation */
+.tab-navigation {
+  display: flex;
+  background: white;
+  border-radius: 12px;
+  padding: 0.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--gray-200);
+  gap: 0.25rem;
+}
+
+.tab-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  color: var(--gray-600);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.tab-btn.active {
+  background: linear-gradient(45deg, var(--primary-blue), var(--primary-blue-dark));
+  color: white;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.tab-btn:hover:not(.active) {
+  background: var(--gray-100);
+  color: var(--gray-800);
+}
+
+.tab-btn .badge {
+  margin-left: 0.5rem;
+}
+
+/* Admin Cards */
+.admin-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--gray-200);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.card-header {
+  background: var(--gray-50);
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+/* Search Box */
+.search-box {
+  position: relative;
+  width: 300px;
+}
+
+.search-box input {
+  padding-left: 2.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--gray-300);
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray-400);
+}
+
+.suggestions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.suggestion-item {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  background: none;
+  text-align: left;
+  transition: background 0.2s;
+}
+
+.suggestion-item:hover {
+  background: var(--gray-50);
+}
+
+.suggestion-main {
+  font-weight: 500;
+  color: var(--gray-800);
+}
+
+.suggestion-sub {
+  font-size: 0.8rem;
+  color: var(--gray-600);
+}
+
+/* Forms */
+.create-form {
+  background: var(--gray-50);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--gray-200);
+}
+
+.form-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--gray-300);
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: 0.5rem;
+}
+
+.form-control, .form-select {
+  border-radius: 8px;
+  border: 1px solid var(--gray-300);
+  padding: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.15);
+}
+
+/* Tables */
+.admin-table {
+  margin: 0;
+}
+
+.admin-table th {
+  background: var(--gray-50);
+  border: none;
+  padding: 1rem;
+  font-weight: 600;
+  color: var(--gray-700);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-table td {
+  padding: 1rem;
+  border-color: var(--gray-200);
+  vertical-align: middle;
+}
+
+.policy-number, .claim-id, .request-id {
+  font-family: 'Monaco', monospace;
+  font-weight: 600;
+  color: var(--primary-blue);
+  font-size: 0.9rem;
+}
+
+.customer-name {
+  font-weight: 500;
+  color: var(--gray-800);
+}
+
+.type-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.type-health { background: rgba(16, 185, 129, 0.1); color: #059669; }
+.type-motor { background: rgba(239, 68, 68, 0.1); color: #dc2626; }
+.type-home { background: rgba(245, 158, 11, 0.1); color: #d97706; }
+.type-life { background: rgba(59, 130, 246, 0.1); color: #2563eb; }
+.type-travel { background: rgba(139, 92, 246, 0.1); color: #7c3aed; }
+
+.premium-amount, .cost, .total-cost {
+  font-weight: 600;
+  color: var(--success);
+  font-family: 'Monaco', monospace;
+}
+
+.date {
+  font-size: 0.875rem;
+  color: var(--gray-600);
+}
+
+.user-id {
+  background: var(--gray-100);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.8rem;
+}
+
+.status-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-pending { background: rgba(245, 158, 11, 0.1); color: #d97706; }
+.status-approved { background: rgba(16, 185, 129, 0.1); color: #059669; }
+.status-rejected { background: rgba(239, 68, 68, 0.1); color: #dc2626; }
+
+.priority-badge {
+  padding: 0.3rem 0.6rem;
+  border-radius: 15px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.priority-high { background: rgba(239, 68, 68, 0.1); color: #dc2626; }
+.priority-medium { background: rgba(245, 158, 11, 0.1); color: #d97706; }
+.priority-low { background: rgba(16, 185, 129, 0.1); color: #059669; }
+
+.category-badge {
+  background: var(--gray-100);
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  color: var(--gray-700);
+}
+
+.item-info {
+  max-width: 200px;
+}
+
+.item-name {
+  font-weight: 500;
+  color: var(--gray-800);
+}
+
+.item-description {
+  font-size: 0.8rem;
+  color: var(--gray-600);
+  margin-top: 0.25rem;
+}
+
+.description-cell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.remarks-section {
+  min-width: 200px;
+}
+
+.remarks-section input {
+  font-size: 0.8rem;
+}
+
+.previous-remarks {
+  margin-top: 0.25rem;
+}
+
+.attachment-link {
+  color: var(--primary-blue);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.attachment-link:hover {
+  text-decoration: underline;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.action-buttons .btn {
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  min-width: 36px;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--gray-500);
+}
+
+.empty-state i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-state h6 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--gray-700);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .admin-header {
+    text-align: center;
+  }
+  
+  .admin-title {
+    font-size: 1.8rem;
+  }
+  
+  .stats-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .tab-navigation {
+    flex-direction: column;
+  }
+  
+  .search-box {
+    width: 100%;
+  }
+  
+  .admin-table {
+    font-size: 0.8rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+}
+</style>
